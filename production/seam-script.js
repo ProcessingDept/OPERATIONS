@@ -1,5 +1,5 @@
 import { supabase } from '../assets/js/db-config.js';
-
+console.log("Supabase connection initialized:", supabase);
 document.getElementById('seamForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     
