@@ -17,5 +17,22 @@
         <li><a href="production/other-report.html">REC 7.2.14 Calibration Report</a></li>
     </ul>
 </div>
-</body>
+<script>
+function filterFiles() {
+    let input = document.getElementById('searchInput');
+    let filter = input.value.toUpperCase();
+    let ul = document.getElementById("fileList");
+    let li = ul.getElementsByTagName('li');
+
+    for (let i = 0; i < li.length; i++) {
+        let a = li[i].getElementsByTagName("a")[0];
+        let txtValue = a.textContent || a.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+</script></body>
 </html>
