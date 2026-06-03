@@ -1,0 +1,9 @@
+{
+  "Fujian": {
+    "seam_thickness": { "min": 1.20, "max": 1.50 },
+    "seam_length": { "min": 2.70, "max": 3.10 },
+    "cover_hook": { "min": 1.75, "max": 2.15 },
+    "body_hook": { "min": 1.75, "max": 2.15 },
+    "actual_overlap": { "min": 1.00 }
+  }
+}
