@@ -1,9 +1,21 @@
 {
-  "Fujian": {
-    "seam_thickness": { "min": 1.20, "max": 1.50 },
-    "seam_length": { "min": 2.70, "max": 3.10 },
-    "cover_hook": { "min": 1.75, "max": 2.15 },
-    "body_hook": { "min": 1.75, "max": 2.15 },
-    "actual_overlap": { "min": 1.00 }
+  "global_constants": {
+    "actual_overlap": { "min_mm": 1.00 },
+    "overlap_percent": { "min_percent": 45 },
+    "juncture_rating_bhb": { "min_percent": 70, "max_percent": 90 },
+    "freespace": {
+      "external": { "min_mm": 0.03, "max_mm": 0.19 },
+      "internal": { "min_mm": 0.06, "max_mm": 0.17 }
+    }
+  },
+  "manufacturers": {
+    "Fujian_Example": {
+      "variable_specs": {
+        "seam_thickness": { "min": 1.20, "max": 1.50 },
+        "seam_length": { "min": 2.70, "max": 3.10 },
+        "body_hook": { "min": 1.75, "max": 2.15 },
+        "cover_hook": { "min": 1.75, "max": 2.15 }
+      }
+    }
   }
 }
