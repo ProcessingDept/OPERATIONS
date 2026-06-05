@@ -46,32 +46,68 @@
 <script type="module">
     import { supabase } from '../assets/js/db-config.js';
 
-    window.submitData = async () => {
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerText = "Syncing...";
+window.submitData = async () => {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerText = "Syncing...";
 
-        // Collect the detailed data
-        const payload = {
-            ag_code: document.getElementById('ag_code').value,
-            pallet_cans: document.getElementById('pallet_cans').value,
-            // Example of collecting all 6 points for Seam Length
-            data_sl: [
-                document.getElementById('sl_c1_p1').value, document.getElementById('sl_c1_p2').value, document.getElementById('sl_c1_p3').value,
-                document.getElementById('sl_c2_p1').value, document.getElementById('sl_c2_p2').value, document.getElementById('sl_c2_p3').value
-            ]
-        };
+    try {
+        // 1. Insert Header Data
+        const { data: header, error: headerError } = await supabase
+            .from('double_seam_inspection_log')
+            .insert([{
+                inspector: 'Current User', // Add your logic to get user
+                inspection_date: new Date().toISOString(),
+                job_number: 'PENDING', // Get from input
+                ag_code: document.getElementById('ag_code').value,
+                pallet_code_cans: document.getElementById('pallet_cans').value,
+                // Add other header fields here
+            }])
+            .select();
 
-        const { error } = await supabase.from('double_seam_logs').insert([payload]);
-        
-        if (error) {
-            alert("Error: " + error.message);
-        } else {
-            alert("Full report synced!");
-        }
+        if (headerError) throw headerError;
+        const logId = header[0].id; // THIS IS THE KEY
+
+        // 2. Prepare Measurement Data
+        const measurements = [
+            {
+                log_id: logId,
+                metric_name: 'seam_length',
+                can_a_p1: document.getElementById('sl_c1_p1').value,
+                can_a_p2: document.getElementById('sl_c1_p2').value,
+                can_a_p3: document.getElementById('sl_c1_p3').value,
+                can_b_p1: document.getElementById('sl_c2_p1').value,
+                can_b_p2: document.getElementById('sl_c2_p2').value,
+                can_b_p3: document.getElementById('sl_c2_p3').value
+            },
+            {
+                log_id: logId,
+                metric_name: 'body_hook',
+                can_a_p1: document.getElementById('bh_c1_p1').value,
+                can_a_p2: document.getElementById('bh_c1_p2').value,
+                can_a_p3: document.getElementById('bh_c1_p3').value,
+                can_b_p1: document.getElementById('bh_c2_p1').value,
+                can_b_p2: document.getElementById('bh_c2_p2').value,
+                can_b_p3: document.getElementById('bh_c2_p3').value
+            }
+        ];
+
+        // 3. Batch Insert Measurements
+        const { error: measError } = await supabase
+            .from('inspection_measurements')
+            .insert(measurements);
+
+        if (measError) throw measError;
+
+        alert("Full report synced!");
+
+    } catch (err) {
+        alert("Error: " + err.message);
+    } finally {
         btn.disabled = false;
         btn.innerText = "SYNC FULL REPORT TO CLOUD";
-    };
+    }
+};
 </script>
 </body>
 </html>
