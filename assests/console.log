@@ -1,0 +1,26 @@
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+// Use the environment variable approach
+const SUPABASE_URL = 'https://your-project-id.supabase.co';
+const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_KEY; 
+
+export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// The "Smoke Test"
+async function checkConnection() {
+    try {
+        // We perform a light check: querying a table that should exist
+        // or just fetching the auth status
+        const { data, error } = await supabase.from('double_seam_inspection_log')
+                                              .select('id', { count: 'exact', head: true });
+        
+        if (error) throw error;
+        
+        console.log("✅ Success: Connection to Supabase is active.");
+    } catch (err) {
+        console.error("❌ Critical: Could not connect to Supabase.");
+        console.error("Details:", err.message);
+    }
+}
+
+checkConnection();
