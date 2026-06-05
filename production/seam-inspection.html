@@ -3,88 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QC Inspection | Mobile Pro</title>
+    <title>Full Seam Audit</title>
     <style>
-        body { font-family: sans-serif; padding: 10px; background: #f4f4f9; }
-        .controls { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
-        .metric-row { background: #fff; padding: 10px; margin-bottom: 10px; border-radius: 8px; border-left: 5px solid #003366; }
-        .row-hidden { display: none; }
-        input { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 15px; background: #003366; color: white; border: none; border-radius: 5px; font-size: 18px; }
+        body { font-family: sans-serif; background: #f4f4f9; padding: 15px; }
+        .header, .metric-card { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        label { font-weight: bold; display: block; margin-bottom: 5px; color: #333; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        button { width: 100%; padding: 18px; background: #003366; color: white; border: none; border-radius: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="controls">
-    <h3>Double Seam Inspection</h3>
-    <select id="modeToggle" onchange="toggleMode()">
-        <option value="full">Full Audit</option>
-        <option value="quick">Quick Test</option>
-    </select>
-    <input type="text" id="ag_code" placeholder="AG CODE">
+<div class="header">
+    <input type="text" id="inspector_name" placeholder="Inspector Name" required>
+    <input type="text" id="line_number" placeholder="Line #" required>
 </div>
 
-<div id="tableBody">
-    <tr class="metric-row" data-metric="seam_thickness">
-        <td><strong>Seam Thickness</strong></td>
-        <td><input type="number" class="p1" placeholder="C1-P1"></td>
-        <td><input type="number" class="p2" placeholder="C1-P2"></td>
-    </tr>
-    </div>
+<div id="form">
+    <div class="metric-card" data-metric="thickness_te"><label>Plate Thickness (Te - Lid)</label><div class="input-row"><input type="number" class="p1" placeholder="Pt 1"><input type="number" class="p2" placeholder="Pt 2"></div></div>
+    <div class="metric-card" data-metric="thickness_tb"><label>Plate Thickness (Tb - Body)</label><div class="input-row"><input type="number" class="p1" placeholder="Pt 1"><input type="number" class="p2" placeholder="Pt 2"></div></div>
+    <div class="metric-card" data-metric="seam_thickness"><label>Seam Thickness</label><div class="input-row"><input type="number" class="p1" placeholder="Pt 1"><input type="number" class="p2" placeholder="Pt 2"></div></div>
+    <div class="metric-card" data-metric="seam_length"><label>Seam Length</label><div class="input-row"><input type="number" class="p1" placeholder="Pt 1"><input type="number" class="p2" placeholder="Pt 2"></div></div>
+    <div class="metric-card" data-metric="body_hook"><label>Body Hook</label><div class="input-row"><input type="number" class="p1" placeholder="Pt 1"><input type="number" class="p2" placeholder="Pt 2"></div></div>
+    <div class="metric-card" data-metric="cover_hook"><label>Cover Hook</label><div class="input-row"><input type="number" class="p1" placeholder="Pt 1"><input type="number" class="p2" placeholder="Pt 2"></div></div>
+    <div class="metric-card" data-metric="actual_overlap"><label>Actual Overlap</label><div class="input-row"><input type="number" class="p1" placeholder="Pt 1"><input type="number" class="p2" placeholder="Pt 2"></div></div>
+    <div class="metric-card" data-metric="bhb_percent"><label>BHB %</label><div class="input-row"><input type="number" class="p1" placeholder="Pt 1"><input type="number" class="p2" placeholder="Pt 2"></div></div>
+    <div class="metric-card" data-metric="freespace_ext"><label>Freespace Ext</label><div class="input-row"><input type="number" class="p1" placeholder="Pt 1"><input type="number" class="p2" placeholder="Pt 2"></div></div>
+</div>
 
-<button id="submitBtn" onclick="submitData()">SYNC & RUN AI DIAGNOSTIC</button>
+<button onclick="submitInspection()">SYNC FULL AUDIT</button>
 
 <script type="module">
-    import { supabase } from '../assets/js/db-config.js';
+    import { supabase } from './db-config.js';
 
-    window.toggleMode = () => {
-        const mode = document.getElementById('modeToggle').value;
-        const rows = document.querySelectorAll('.metric-row');
-        // If Quick Test, hide all rows except the first 2 (or your essential ones)
-        rows.forEach((row, index) => {
-            if (mode === 'quick' && index > 1) row.classList.add('row-hidden');
-            else row.classList.remove('row-hidden');
-        });
-    };
+    window.submitInspection = async () => {
+        // 1. Mandatory Validation
+        const allInputs = document.querySelectorAll('input');
+        for (let input of allInputs) {
+            if (!input.value) { alert("Please fill in ALL fields for a Full Audit."); return; }
+        }
 
-    window.submitData = async () => {
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        btn.innerText = "Syncing...";
+        // 2. Insert Log
+        const { data: log } = await supabase.from('double_seam_inspection_log')
+            .insert([{ inspector_name: document.getElementById('inspector_name').value }])
+            .select();
 
-        try {
-            // 1. Insert Header
-            const { data: header } = await supabase.from('double_seam_inspection_log').insert([{ 
-                ag_code: document.getElementById('ag_code').value 
-            }]).select();
+        // 3. Insert Measurements
+        const records = Array.from(document.querySelectorAll('.metric-card')).map(card => ({
+            log_id: log[0].id,
+            metric_name: card.getAttribute('data-metric'),
+            val_p1: card.querySelector('.p1').value,
+            val_p2: card.querySelector('.p2').value
+        }));
 
-            const logId = header[0].id;
-            
-            // 2. Insert Measurements (Only visible rows)
-            const visibleRows = document.querySelectorAll('.metric-row:not(.row-hidden)');
-            const measurements = Array.from(visibleRows).map(row => ({
-                log_id: logId,
-                metric_name: row.getAttribute('data-metric'),
-                can_a_p1: row.querySelector('.p1').value
-            }));
-
-            await supabase.from('inspection_measurements').insert(measurements);
-
-            // 3. AI Diagnostic Feedback (Fetch alerts generated by DB trigger)
-            const { data: alerts } = await supabase
-                .from('inspection_alerts')
-                .select('metric, cause, action')
-                .eq('log_id', logId);
-
-            if (alerts && alerts.length > 0) {
-                let msg = "⚠️ AI DIAGNOSTIC ALERT:\n";
-                alerts.forEach(a => msg += `\n${a.metric}: ${a.cause}. \nFix: ${a.action}`);
-                alert(msg);
-            } else {
-                alert("Sync Successful - All measurements within spec.");
-            }
-        } catch (e) { alert("Error: " + e.message); } 
-        finally { btn.disabled = false; btn.innerText = "SYNC & RUN AI DIAGNOSTIC"; }
+        await supabase.from('inspection_measurements').insert(records);
+        alert("Full Audit Sync Complete.");
     };
 </script>
 </body>
