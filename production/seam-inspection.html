@@ -2,66 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Double Seam Inspection | REC 7.2.12</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QC Inspection | Mobile Pro</title>
     <style>
-        body { font-family: sans-serif; padding: 20px; }
-        .meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-        th { background: #003366; color: white; }
-        .input-cell { width: 50px; text-align: center; }
-        .btn-submit { background: #28a745; color: white; padding: 15px; border: none; cursor: pointer; width: 100%; font-size: 16px; }
+        body { font-family: sans-serif; padding: 10px; background: #f4f4f9; }
+        .controls { background: #fff; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        .metric-row { background: #fff; padding: 10px; margin-bottom: 10px; border-radius: 8px; border-left: 5px solid #003366; }
+        .row-hidden { display: none; }
+        input { width: 100%; padding: 10px; margin: 5px 0; box-sizing: border-box; font-size: 16px; }
+        button { width: 100%; padding: 15px; background: #003366; color: white; border: none; border-radius: 5px; font-size: 18px; }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Double Seam Inspection - REC 7.2.12</h2>
-    
-    <div class="meta-grid">
-        <div><label>AG CODE</label><input type="text" id="ag_code"></div>
-        <div><label>Pallet Cans</label><input type="text" id="pallet_cans"></div>
+
+<div class="controls">
+    <h3>Double Seam Inspection</h3>
+    <select id="modeToggle" onchange="toggleMode()">
+        <option value="full">Full Audit</option>
+        <option value="quick">Quick Test</option>
+    </select>
+    <input type="text" id="ag_code" placeholder="AG CODE">
+</div>
+
+<div id="tableBody">
+    <tr class="metric-row" data-metric="seam_thickness">
+        <td><strong>Seam Thickness</strong></td>
+        <td><input type="number" class="p1" placeholder="C1-P1"></td>
+        <td><input type="number" class="p2" placeholder="C1-P2"></td>
+    </tr>
     </div>
 
-    <table>
-        <thead>
-            <tr><th>Metric</th><th colspan="3">CAN 1</th><th colspan="3">CAN 2</th></tr>
-        </thead>
-        <tbody id="tableBody">
-            <tr class="metric-row" data-metric="seam_thickness"><td>Seam Thickness</td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td></tr>
-            <tr class="metric-row" data-metric="seam_length"><td>Seam Length</td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td></tr>
-            <tr class="metric-row" data-metric="body_hook"><td>Body Hook</td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td></tr>
-            <tr class="metric-row" data-metric="cover_hook"><td>Cover Hook</td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td></tr>
-            <tr class="metric-row" data-metric="actual_overlap"><td>Actual Overlap</td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td></tr>
-            <tr class="metric-row" data-metric="overlap_percent"><td>Overlap %</td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td></tr>
-            <tr class="metric-row" data-metric="bhb_percent"><td>BHB %</td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td></tr>
-            <tr class="metric-row" data-metric="freespace_ext"><td>Freespace Ext</td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td></tr>
-            <tr class="metric-row" data-metric="freespace_int"><td>Freespace Int</td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td>
-                <td><input type="number" class="p1"></td><td><input type="number" class="p2"></td><td><input type="number" class="p3"></td></tr>
-        </tbody>
-    </table>
-
-    <button class="btn-submit" id="submitBtn" onclick="submitData()">SYNC FULL REPORT TO CLOUD</button>
-</div>
+<button id="submitBtn" onclick="submitData()">SYNC & RUN AI DIAGNOSTIC</button>
 
 <script type="module">
     import { supabase } from '../assets/js/db-config.js';
+
+    window.toggleMode = () => {
+        const mode = document.getElementById('modeToggle').value;
+        const rows = document.querySelectorAll('.metric-row');
+        // If Quick Test, hide all rows except the first 2 (or your essential ones)
+        rows.forEach((row, index) => {
+            if (mode === 'quick' && index > 1) row.classList.add('row-hidden');
+            else row.classList.remove('row-hidden');
+        });
+    };
 
     window.submitData = async () => {
         const btn = document.getElementById('submitBtn');
@@ -70,43 +54,37 @@
 
         try {
             // 1. Insert Header
-            const { data: header, error: hErr } = await supabase
-                .from('double_seam_inspection_log')
-                .insert([{ 
-                    inspector: 'Auto-User', 
-                    inspection_date: new Date().toISOString(),
-                    job_number: 'N/A', 
-                    ag_code: document.getElementById('ag_code').value,
-                    pallet_code_cans: document.getElementById('pallet_cans').value 
-                }])
-                .select();
-            if (hErr) throw hErr;
+            const { data: header } = await supabase.from('double_seam_inspection_log').insert([{ 
+                ag_code: document.getElementById('ag_code').value 
+            }]).select();
 
             const logId = header[0].id;
-
-            // 2. Automated Measurement Batch
-            const rows = document.querySelectorAll('.metric-row');
-            const measurements = Array.from(rows).map(row => ({
+            
+            // 2. Insert Measurements (Only visible rows)
+            const visibleRows = document.querySelectorAll('.metric-row:not(.row-hidden)');
+            const measurements = Array.from(visibleRows).map(row => ({
                 log_id: logId,
                 metric_name: row.getAttribute('data-metric'),
-                can_a_p1: row.querySelectorAll('.p1')[0].value,
-                can_a_p2: row.querySelectorAll('.p2')[0].value,
-                can_a_p3: row.querySelectorAll('.p3')[0].value,
-                can_b_p1: row.querySelectorAll('.p1')[1].value,
-                can_b_p2: row.querySelectorAll('.p2')[1].value,
-                can_b_p3: row.querySelectorAll('.p3')[1].value
+                can_a_p1: row.querySelector('.p1').value
             }));
 
-            const { error: mErr } = await supabase.from('inspection_measurements').insert(measurements);
-            if (mErr) throw mErr;
+            await supabase.from('inspection_measurements').insert(measurements);
 
-            alert("Sync Successful!");
-        } catch (e) {
-            alert("Error: " + e.message);
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "SYNC FULL REPORT TO CLOUD";
-        }
+            // 3. AI Diagnostic Feedback (Fetch alerts generated by DB trigger)
+            const { data: alerts } = await supabase
+                .from('inspection_alerts')
+                .select('metric, cause, action')
+                .eq('log_id', logId);
+
+            if (alerts && alerts.length > 0) {
+                let msg = "⚠️ AI DIAGNOSTIC ALERT:\n";
+                alerts.forEach(a => msg += `\n${a.metric}: ${a.cause}. \nFix: ${a.action}`);
+                alert(msg);
+            } else {
+                alert("Sync Successful - All measurements within spec.");
+            }
+        } catch (e) { alert("Error: " + e.message); } 
+        finally { btn.disabled = false; btn.innerText = "SYNC & RUN AI DIAGNOSTIC"; }
     };
 </script>
 </body>
