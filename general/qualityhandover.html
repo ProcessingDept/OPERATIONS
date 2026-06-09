@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>REC 9.9.2 Quality Handover Report - Abagold</title>
+    <title>REC 9.9.2 Quality Handover Report</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>       
         body { 
@@ -131,7 +131,7 @@
 
     <div class="max-w-5xl mx-auto">
         <div class="print-header">
-            <h1 id="dynamicPrintTitle">REC 9.9.2 QUALITY HANDOVER REPORT</h1>
+            <h1 id="dynamicPrintTitle">REC 9.9.2 QUALITY HANDOVER REPORT  ${shiftVal} - ${dateVal}</h1>
         </div>
 
         <div class="flex justify-between items-center mb-6 no-print">
@@ -532,7 +532,7 @@
             const shiftVal = document.getElementById('hShift').value;
             const nameVal = document.getElementById('hName').value.toUpperCase();
             
-            document.getElementById('dynamicPrintTitle').innerText = `QUALITY HANDOVER REPORT - ${shiftVal} - ${dateVal} - ${nameVal}`;
+            document.getElementById('dynamicPrintTitle').innerText = `REC 9.9.2 QUALITY HANDOVER REPORT  ${shiftVal} - ${dateVal}`;
             
             document.getElementById('p-ag-code').innerText = document.getElementById('ag-code').value || "---";
             document.getElementById('p-pallet-num').innerText = document.getElementById('pallet-num').value || "---";
