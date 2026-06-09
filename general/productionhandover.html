@@ -1,1 +1,73 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REC 9.9.3 Production Handover Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f1f5f9; color: #0f172a; padding: 20px; font-size: 14px; }
+        .section-card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .section-title { font-weight: 800; font-size: 16px; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; color: #1e293b; display: flex; align-items: center; gap: 10px; }
+        .job-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 10px; }
+        input, select, textarea { border: 1px solid #cbd5e1; border-radius: 6px; padding: 8px; width: 100%; font-size: 13px; }
+        .print-only { display: none; }
+        @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
+    </style>
+</head>
+<body>
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-2xl font-black mb-6 no-print">REC 9.9.3 Production Handover</h1>
+
+        <div class="section-card">
+            <div class="section-title">1. Shift Information</div>
+            <div class="grid grid-cols-3 gap-4">
+                <input type="date" id="shiftDate">
+                <select id="shiftType"><option>Day Shift</option><option>Night Shift</option></select>
+                <input type="text" id="shiftManager" placeholder="Shift Manager">
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">2. Harvest Intake <button onclick="addHarvest()" class="ml-auto text-xs bg-emerald-600 text-white px-3 py-1 rounded">+ Add</button></div>
+            <div id="harvestContainer"></div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">3. Live Operations</div>
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="text-[10px] font-bold uppercase text-slate-500">Baskets Sorted</label><input type="number" id="sortedBaskets"></div>
+                <div><label class="text-[10px] font-bold uppercase text-slate-500">Drip Loss %</label><input type="number" id="dripLoss"></div>
+            </div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">4. Canning <button onclick="addCanning()" class="ml-auto text-xs bg-rose-600 text-white px-3 py-1 rounded">+ Add</button></div>
+            <div id="canningContainer"></div>
+        </div>
+
+        <div class="section-card">
+            <div class="section-title">5. Drying</div>
+            <div class="font-bold text-sm text-cyan-800 mb-2 uppercase">Dry Cooking</div>
+            <div id="dryContainer"></div>
+            <div class="font-bold text-sm text-indigo-800 mt-4 mb-2 uppercase">Grading</div>
+            <div id="gradeContainer"></div>
+            <button onclick="addDrying('dry')" class="text-xs bg-cyan-600 text-white px-3 py-1 rounded mt-2">+ Dry</button>
+            <button onclick="addDrying('grade')" class="text-xs bg-indigo-600 text-white px-3 py-1 rounded mt-2">+ Grade</button>
+        </div>
+
+        <button onclick="window.print()" class="w-full bg-blue-800 text-white py-4 rounded-xl font-bold no-print">GENERATE PRINT/PDF</button>
+    </div>
+
+    <script>
+        function addCanning() {
+            const div = document.createElement('div');
+            div.className = 'job-card';
+            div.innerHTML = `<div class="grid grid-cols-4 gap-2"><input type="text" placeholder="Job #"><input type="number" placeholder="Harv Wt"><input type="number" placeholder="% Scrubbed"><input type="number" placeholder="% Precooked"></div><textarea class="mt-2" placeholder="Notes..."></textarea>`;
+            document.getElementById('canningContainer').appendChild(div);
+        }
+        function addDrying(type) { /* Logic similar to above */ }
+    </script>
+</body>
+</html>
