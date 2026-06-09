@@ -531,8 +531,8 @@
             const dateVal = document.getElementById('hDate').value;
             const shiftVal = document.getElementById('hShift').value;
             
-            document.getElementById('dynamicPrintTitle').innerText = `REC 9.9.2 QUALITY HANDOVER REPORT  ${shiftVal} - ${dateVal}`;
-document.title = `REC_9.9.2_Quality_Handover_REPORT_[${shiftVal}_${dateVal}]`;
+            document.getElementById('dynamicPrintTitle').innerText = `REC 9.9.2 QUALITY HANDOVER REPORT              ${shiftVal} SHIFT - ${dateVal}`;
+document.title = `REC_9.9.2_Quality_Handover_${shiftVal}SHIFT_${dateVal}`;
             
             document.getElementById('p-ag-code').innerText = document.getElementById('ag-code').value || "---";
             document.getElementById('p-pallet-num').innerText = document.getElementById('pallet-num').value || "---";
