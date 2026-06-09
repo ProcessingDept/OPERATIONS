@@ -2,37 +2,55 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Factory Inspection Dashboard</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="container">
-    <h1>Inspection Dashboard</h1>
-    
-    <input type="text" id="searchInput" onkeyup="filterFiles()" placeholder="Search reports (e.g., REC 7.2.12)...">
+<body class="bg-slate-50 min-h-screen p-4 md:p-8">
 
-    <ul id="fileList" class="nav-links">
-        <li><a href="production/seam-inspection.html">REC 7.2.12 Double Seam Inspection</a></li>
-        <li><a href="general/qualityhandover.html">REC 9.9.2 Handover Report</a></li>
-        <li><a href="production/other-report.html">REC 7.2.14 Calibration Report</a></li>
-    </ul>
-</div>
-<script>
-function filterFiles() {
-    let input = document.getElementById('searchInput');
-    let filter = input.value.toUpperCase();
-    let ul = document.getElementById("fileList");
-    let li = ul.getElementsByTagName('li');
+    <div class="max-w-4xl mx-auto">
+        <header class="mb-10 text-center">
+            <h1 class="text-2xl font-black text-slate-800 uppercase tracking-tight">Inspection Dashboard</h1>
+            <p class="text-slate-400 text-sm mt-1">Select an inspection module below</p>
+        </header>
 
-    for (let i = 0; i < li.length; i++) {
-        let a = li[i].getElementsByTagName("a")[0];
-        let txtValue = a.textContent || a.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-        }
+        <div class="mb-8">
+            <input type="text" id="searchInput" onkeyup="filterFiles()" 
+                   placeholder="Filter reports by name..."
+                   class="w-full p-3 rounded-lg border border-slate-200 bg-white shadow-sm focus:ring-2 focus:ring-slate-400 outline-none">
+        </div>
+
+        <div id="fileList" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <a href="general/qualityhandover.html" class="report-item group p-4 bg-white border border-slate-200 rounded-xl hover:border-slate-400 transition-all shadow-sm">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">REC 9.9.2</span>
+                <p class="font-bold text-slate-700 leading-tight mt-1">Quality Handover</p>
+            </a>
+
+            <a href="#" class="report-item group p-4 bg-white border border-slate-200 rounded-xl hover:border-slate-400 transition-all shadow-sm opacity-50 cursor-not-allowed">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">REC 7.2.12</span>
+                <p class="font-bold text-slate-700 leading-tight mt-1">Seam Inspection</p>
+            </a>
+
+            <a href="#" class="report-item group p-4 bg-white border border-slate-200 rounded-xl hover:border-slate-400 transition-all shadow-sm opacity-50 cursor-not-allowed">
+                <span class="text-[10px] font-bold text-slate-400 uppercase">REC 7.2.14</span>
+                <p class="font-bold text-slate-700 leading-tight mt-1">Calibration</p>
+            </a>
+
+        </div>
+    </div>
+
+    <script>
+    function filterFiles() {
+        let input = document.getElementById('searchInput');
+        let filter = input.value.toUpperCase();
+        let items = document.querySelectorAll('.report-item');
+
+        items.forEach(item => {
+            let text = item.textContent || item.innerText;
+            item.parentElement.style.display = text.toUpperCase().indexOf(filter) > -1 ? "" : "none";
+        });
     }
-}
-</script></body>
+    </script>
+</body>
 </html>
